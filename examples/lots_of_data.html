@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title>Storekey Storing Lots Of Data Example</title>
+	<script src="socket.io/socket.io.js"></script>
+	<script src="../storekey-web-client/Storekey-web-client.js"></script>
+</head>
+<body>
+<script>
+window.onload = function() {
+	var Storekey = storekey("http://localhost.rocks:1337");
+	var connect = Storekey.connect(function(sock) {
+		sock.on('connected', function(data) {
+	    	console.log("Store Key Server Online:", data);
+			if (data.online) {
+                console.log("Connected To Storekey Server On: ", Storekey.host);
+				x = 10000;
+				for (i=0;i<x;i++) {
+					Storekey.set(Math.random()*99999999,Math.random()*99999999);
+				}
+			}
+		});
+		sock.on('disconnected', function(){
+			console.log("disconnected");
+		});
+		window.onbeforeunload=function() {
+			Storekey.disconnect("Exiting Normally");
+		};
+	});
+}
+</script>
+<p>
+1000 Random Numbers With Random Expiries Stored
+</p>
+</body>
+</html>

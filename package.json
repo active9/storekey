@@ -1,0 +1,27 @@
+{
+  "name": "storekey",
+  "description": "StoreKey - Key Store Server",
+  "version": "0.0.2",
+  "dependencies": {
+    "clui": "^0.3.1",
+    "socket.io": "*"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js",
+  "directories": {
+    "example": "examples"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "store",
+    "key",
+    "memory",
+    "cache",
+    "memcache",
+    "redis"
+  ],
+  "author": "Active 9 LLC.",
+  "license": "MIT"
+}

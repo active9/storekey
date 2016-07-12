@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>Storekey Basic Asynchronous Example</title>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="../storekey-web-client/Storekey-web-client.js"></script>
+</head>
+<body>
+<script>
+window.onload = function() {
+    var Storekey = storekey("http://localhost.rocks:1337");
+    var connect = Storekey.connect(function(sock) {
+        sock.on('connected', function(data) {
+    	    console.log("Store Key Server Online:", data);
+            if (data.online) {
+                console.log("Connected To Storekey Server On: ", Storekey.host);
+
+    		    // Basic Set & Get
+                Storekey.set("Key", "Value 1");
+                Storekey.get("Key");
+
+    		    // Deleting A Key Then Attempting To Get it Again (Should Be Blank)
+                Storekey.set("KeyB", "Value Basdf asdfasd fasd fasf asd fas df");
+                Storekey.delete("KeyB");
+                Storekey.get("KeyB");
+
+    		    // Set A Key That Expires In 1 millisecond (Expire Before We Can Get It)
+                Storekey.set("KeyZ", "Value Z", 1);
+                Storekey.get("KeyZ");
+
+            } else {
+    		  console.log("Storekey Server Offline.");
+    	    }
+        });
+        sock.on('get', function(data) {
+            var date = new Date();
+            if (data.expires > date.getTime()) {
+    		    document.getElementById("result").innerHTML += JSON.stringify(data) +"<hr />";
+                console.log("RESULT:", data);
+            }
+        });
+        sock.on('disconnected', function() {
+            console.log("disconnected");
+        });
+	    window.onbeforeunload = function() {
+	        Storekey.disconnect("Exiting Normally");
+	    };
+    });
+}
+</script>
+<p>
+Data test: <div id="result"></div>
+</p>
+</body>
+</html>
